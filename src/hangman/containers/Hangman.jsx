@@ -3,16 +3,19 @@ import Figure from '../component/Figure'
 import { Header } from '../component/Header'
 import Word from '../component/Word'
 import WrongLetter from '../component/WrongLetter'
+import { ShowNotification as show } from '../helpers/helpers'
+import Notification from '../component/Notification'
+import Popup from '../component/Popup'
 
 import './Hangman.css'
 
 const Hangman = () => {
-    const words = ['application', 'programming', 'interface', 'wizard'];
+    const words = ['apple', 'ball', 'cat', 'egg'];
     let selectedWord = words[Math.floor(Math.random() * words.length)];
     const [playable, setPlayable] = useState(true);
     const [correctLetters, setCorrectLetters] = useState([]);
     const [wrongLetters, setWrongLetters] = useState([]);
-
+    const [showNotification, setShowNotification] = useState(false);
 
     useEffect(() => {
         const handleKeyDown = event => {
@@ -22,45 +25,35 @@ const Hangman = () => {
 
                 if (selectedWord.includes(letter)) {
                     if (!correctLetters.includes(letter)) {
-                      
-                        setCorrectLetters(correctLetters=>[...correctLetters,letter])
-           
+                        setCorrectLetters(correctLetters => [...correctLetters, letter]);
                     } else {
-                        // showNotification();
+                        show(setShowNotification);
                     }
                 } else {
                     if (!wrongLetters.includes(letter)) {
-                        wrongLetters.push(letter);
-                        setWrongLetters(wrongLetters=>[...wrongLetters,letter])
-                       
+                        setWrongLetters(wrongLetters => [...wrongLetters, letter])
                     } else {
-                        // showNotification();
+                        show(setShowNotification)
                     }
                 }
             }
         }
-        window.addEventListener('keydown',handleKeyDown )
-        return ()=>window.removeEventListener('keydown',handleKeyDown)
-    },[correctLetters,wrongLetters,playable])
-
-
-
-
-
-
-
-
+        window.addEventListener('keydown', handleKeyDown)
+        return () => window.removeEventListener('keydown', handleKeyDown)
+    }, [correctLetters, wrongLetters, playable])
 
 
     return (
         <>
             <Header />
             <div className="game-container">
-                <Figure />
-                <WrongLetter wrongLetters={wrongLetters}/>
+                <Figure wrongLetters={wrongLetters} />
+                <WrongLetter wrongLetters={wrongLetters} />
                 <Word selectedWord={selectedWord} correctLetters={correctLetters} />
 
             </div>
+            <Popup correctLetters={correctLetters} wrongLetters={wrongLetters} selectedWord={selectedWord} setPlayable={setPlayable}/>
+            <Notification showNotification={showNotification} />
         </>
     )
 }
