@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Word = ({ selectedWord, correctLetters }) => {
+function Word ({ selectedWord, correctLetters })  {
     return (
         <div className="word" >
             {selectedWord.split('').map((letter, i) => {
@@ -10,6 +10,9 @@ const Word = ({ selectedWord, correctLetters }) => {
                     </span>
                 )
             })}
+
+     
+          
         </div>
     )
 }
